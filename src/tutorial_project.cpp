@@ -4,6 +4,7 @@
 
 #include "GraphicsSystem.h"
 #include "GameState.h"
+#include "custom_game_state.h"
 
 #include "OgreWindow.h"
 #include "OgreTimer.h"
@@ -32,8 +33,8 @@ namespace Demo {
                                         GraphicsSystem **outGraphicsSystem,
                                         GameState **outLogicGameState,
                                         LogicSystem **outLogicSystem) {
-        GameState *gfxGameState = new GameState();
-        GraphicsSystem *graphicsSystem = new Tutorial::TutorialGraphicsSystem(gfxGameState);
+        auto *gfxGameState = new Tutorial::CustomGameState("");
+        auto *graphicsSystem = new GraphicsSystem(gfxGameState);
 
         *outGraphicsGameState = gfxGameState;
         *outGraphicsSystem = graphicsSystem;
@@ -59,10 +60,24 @@ INT WINAPI WinMainApp( HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR strCmdLin
 int mainApp(int argc, const char *argv[])
 #endif
 {
-    GameState game_state;
-    Tutorial::TutorialGraphicsSystem graphics_system(&game_state);
+    Tutorial::CustomGameState custom_game_state(
+            "This tutorial demonstrates the most basic rendering loop: Variable framerate.\n"
+            "Variable framerate means the application adapts to the current frame rendering\n"
+            "performance and boosts or decreases the movement speed of objects to maintain\n"
+            "the appearance that objects are moving at a constant velocity.\n"
+            "When framerate is low, it looks 'frame skippy'; when framerate is high,\n"
+            "it looks very smooth.\n"
+            "Note: If you can't exceed 60 FPS, it's probably because of VSync being turned on.\n"
+            "\n"
+            "Despite what it seems, this is the most basic form of updating, and a horrible way\n"
+            "to update your objects if you want to do any kind of serious game development.\n"
+            "Keep going through the Tutorials for superior methods of updating the rendering loop.\n"
+            "\n"
+            "Note: The cube is black because there is no lighting. We are not focusing on that.");
+    GraphicsSystem graphics_system(&custom_game_state);
+    custom_game_state._notifyGraphicsSystem(&graphics_system);
 
-    graphics_system.initialize("Tutorial 01");
+    graphics_system.initialize("Tutorial 02");
     if (graphics_system.getQuit()) {
         graphics_system.deinitialize();
         return 0;
