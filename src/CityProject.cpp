@@ -1,5 +1,5 @@
 #include "GraphicsSystem.h"
-#include "EmptyProjectGameState.h"
+#include "CityProjectGameState.h"
 
 #include "OgreSceneManager.h"
 #include "OgreCamera.h"
@@ -26,6 +26,11 @@
 #include "shlobj.h"
 #endif
 
+// ========================================================
+// custom headers
+#include "config.h"
+// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
 INT WINAPI WinMainApp( HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR strCmdLine, INT nCmdShow )
 #else
@@ -37,12 +42,12 @@ int mainApp(int argc, const char *argv[])
 }
 
 namespace Demo {
-    class EmptyProjectGraphicsSystem : public GraphicsSystem {
-        virtual Ogre::CompositorWorkspace *setupCompositor() {
+    class CityProjectGraphicsSystem : public GraphicsSystem {
+        Ogre::CompositorWorkspace *setupCompositor() override {
             return GraphicsSystem::setupCompositor();
         }
 
-        virtual void setupResources(void) {
+        void setupResources(void) override {
             GraphicsSystem::setupResources();
 
             Ogre::ConfigFile cf;
@@ -61,20 +66,20 @@ namespace Demo {
         }
 
     public:
-        EmptyProjectGraphicsSystem(GameState *gameState) :
+        explicit CityProjectGraphicsSystem(GameState *gameState) :
                 GraphicsSystem(gameState) {
             mResourcePath = "../Data/";
 
             //It's recommended that you set this path to:
-            //	%APPDATA%/EmptyProject/ on Windows
-            //	~/.config/EmptyProject/ on Linux
-            //	macCachePath() + "/EmptyProject/" (NSCachesDirectory) on Apple -> Important because
+            //	%APPDATA%/CityProject/ on Windows
+            //	~/.config/CityProject/ on Linux
+            //	macCachePath() + "/CityProject/" (NSCachesDirectory) on Apple -> Important because
             //	on iOS your app could be rejected from App Store when they see iCloud
             //	trying to backup your Ogre.log & ogre.cfg auto-generated without user
             //	intervention. Also convenient because these settings will be deleted
             //	if the user removes cached data from the app, so the settings will be
             //	reset.
-            //  Obviously you can replace "EmptyProject" by your app's name.
+            //  Obviously you can replace "CityProject" by your app's name.
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
             mWriteAccessFolder =  + "/";
             TCHAR path[MAX_PATH];
@@ -94,7 +99,7 @@ namespace Demo {
                 CharToOem( path, oemPath );
                 mWriteAccessFolder = std::string( oemPath );
 #endif
-                mWriteAccessFolder += "/EmptyProject/";
+                mWriteAccessFolder += "/CityProject/";
 
                 //Attempt to create directory where config files go
                 if( !CreateDirectoryA( mWriteAccessFolder.c_str(), NULL ) &&
@@ -120,8 +125,8 @@ namespace Demo {
                        mWriteAccessFolder.c_str());
                 mWriteAccessFolder = "";
             } else {
-                //Create "~/.config/EmptyProject"
-                mWriteAccessFolder += "/EmptyProject/";
+                //Create "~/.config/CityProject"
+                mWriteAccessFolder += "/CityProject/";
                 result = mkdir(mWriteAccessFolder.c_str(), S_IRWXU | S_IRWXG);
                 errorReason = errno;
 
@@ -132,9 +137,9 @@ namespace Demo {
                 }
             }
 #elif OGRE_PLATFORM == OGRE_PLATFORM_APPLE || OGRE_PLATFORM == OGRE_PLATFORM_APPLE_IOS
-            mWriteAccessFolder = macCachePath() + "/EmptyProject/";
-            //Create "pathToCache/EmptyProject"
-            mWriteAccessFolder += "/EmptyProject/";
+            mWriteAccessFolder = macCachePath() + "/CityProject/";
+            //Create "pathToCache/CityProject"
+            mWriteAccessFolder += "/CityProject/";
             result = mkdir( mWriteAccessFolder.c_str(), S_IRWXU|S_IRWXG );
             errorReason = errno;
 
@@ -152,10 +157,10 @@ namespace Demo {
                                         GraphicsSystem **outGraphicsSystem,
                                         GameState **outLogicGameState,
                                         LogicSystem **outLogicSystem) {
-        EmptyProjectGameState *gfxGameState = new EmptyProjectGameState(
-                "Empty Project Example");
+        auto *gfxGameState = new CityProjectGameState(
+                "City Project");
 
-        GraphicsSystem *graphicsSystem = new EmptyProjectGraphicsSystem(gfxGameState);
+        GraphicsSystem *graphicsSystem = new CityProjectGraphicsSystem(gfxGameState);
 
         gfxGameState->_notifyGraphicsSystem(graphicsSystem);
 
