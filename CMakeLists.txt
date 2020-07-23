@@ -78,7 +78,7 @@ add_recursive(./include HEADERS)
 
 if (APPLE)
     file(GLOB_RECURSE RESOURCES ./src/*.storyboard)
-    set(RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data)
+    set(RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data src/tutorial_project.cpp)
 endif ()
 
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCES})
