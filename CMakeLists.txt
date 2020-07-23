@@ -73,11 +73,8 @@ else ()
     endmacro()
 endif ()
 
-# add_recursive(./src SOURCES)
-# add_recursive(./include HEADERS)
-set(SOURCES
-        ./src/tutorial.cpp)
-set(HEADERS)
+add_recursive(./src SOURCES)
+add_recursive(./include HEADERS)
 
 if (APPLE)
     file(GLOB_RECURSE RESOURCES ./src/*.storyboard)
