@@ -73,12 +73,15 @@ else ()
     endmacro()
 endif ()
 
-add_recursive(./src SOURCES)
-add_recursive(./include HEADERS)
+# add_recursive(./src SOURCES)
+# add_recursive(./include HEADERS)
+set(SOURCES
+        ./src/tutorial.cpp)
+set(HEADERS)
 
 if (APPLE)
     file(GLOB_RECURSE RESOURCES ./src/*.storyboard)
-    set(RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data template/config.h.in)
+    set(RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data template/config.h.in src/tutorial.cpp)
 endif ()
 
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCES})
@@ -102,3 +105,8 @@ else ()
     message(STATUS "IPO / LTO not supported: <${error}>")
 endif ()
 # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# =========================================================
+# misc post process
+file(COPY ${CMAKE_SOURCE_DIR}/bin/Data/resources2.cfg DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE})
