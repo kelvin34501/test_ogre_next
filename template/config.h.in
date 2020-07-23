@@ -1,0 +1,12 @@
+//
+// Created by kelvin34501 on 7/23/20.
+//
+
+#ifndef TESTOGRENEXT_CONFIG_H
+#define TESTOGRENEXT_CONFIG_H
+
+#define TestOgreNext_VERSION_MAJOR @TestOgreNext_VERSION_MAJOR@
+#define TestOgreNext_VERSION_MINOR @TestOgreNext_VERSION_MINOR@
+#define TestOgreNext_VERSION_PATCH @TestOgreNext_VERSION_PATCH@
+
+#endif //TESTOGRENEXT_CONFIG_H_IN

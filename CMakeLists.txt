@@ -10,17 +10,50 @@
 
 #set( CMAKE_TOOLCHAIN_FILE CMake/iOS.cmake )
 
-cmake_minimum_required( VERSION 3.0 )
+# =========================================================
+# cmake version & policy
+cmake_minimum_required( VERSION 3.5...3.16 )
+
+if(${CMAKE_VERSION} VERSION_LESS 3.12)
+	cmake_policy(VERSION ${CMAKE_MAJOR_VERSION}.${CMAKE_MINOR_VERSION})
+endif()
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# =========================================================
+# define project
 project( TestOgreNext )
 
-set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+if(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
+	message(FATAL_ERROR "In-source builds are not permitted. Make a separate folder for building:\nmkdir build; cd build; cmake ..\nBefore that, remove the files already created:\nrm -rf CMakeCache.txt CMakeFiles")
+endif(CMAKE_SOURCE_DIR STREQUAL CMAKE_BINARY_DIR)
 
+set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}" )
+set( CMAKE_INSTALL_PREFIX "${CMAKE_CURRENT_SOURCE_DIR}/dist")
+
+# check lto
+include(CheckIPOSupported)
+check_ipo_supported(RESULT lto_supported OUTPUT error)
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# =========================================================
+# project setup
 include( CMake/Bootstrap.cmake )
 include( CMake/Dependencies/OGRE.cmake )
 
 setupOgre( OGRE_SOURCE, OGRE_BINARIES, OGRE_LIBRARIES, FALSE )
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-# Setup our application
+
+# =========================================================
+# configure template
+configure_file(template/config.h.in config.h @ONLY)
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+
+# =========================================================
+# executable: TestOgreNext
 set( EXECUTABLE_OUTPUT_PATH "${CMAKE_CURRENT_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}" )
 if( MSVC )
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
@@ -40,18 +73,19 @@ else()
 	endmacro()
 endif()
 
-include_directories( "./include" )
-
 add_recursive( ./src SOURCES )
 add_recursive( ./include HEADERS )
 
 if( APPLE )
 	file( GLOB_RECURSE RESOURCES ./src/*.storyboard )
-	set( RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data )
+	set( RESOURCES ${RESOURCES} ./Data/Resources.cfg ./bin/Data template/config.h.in)
 endif()
 
-add_executable( ${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCES} )
-target_link_libraries( ${PROJECT_NAME} ${OGRE_LIBRARIES} )
+add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCES})
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE "./include")
+target_link_libraries(${PROJECT_NAME} ${OGRE_LIBRARIES})
 
 if( APPLE )
 	set_target_properties( ${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_ENABLE_BITCODE "NO" )
@@ -60,3 +94,11 @@ if( APPLE )
 	#set_target_properties( ${PROJECT_NAME} PROPERTIES MACOSX_BUNDLE_ICON_FILE SampleBrowser_OSX.icns)
 	set( CMAKE_EXE_LINKER_FLAGS "-framework Foundation -framework CoreGraphics -framework QuartzCore -framework UIKit -framework Metal -framework MetalKit -framework ModelIO" )
 endif()
+
+if (lto_supported)
+	message(STATUS "IPO / LTO enabled")
+	set_property(TARGET ${PROJECT_NAME} PROPERTY INTERPROCEDURAL_OPTIMIZATION TRUE)
+else()
+	message(STATUS "IPO / LTO not supported: <${error}>")
+endif()
+# <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
