@@ -8,6 +8,11 @@
 #include "OgreItem.h"
 #include "OgreTextAreaOverlayElement.h"
 
+namespace Tutorial {
+    extern int current_frame_time_idx;
+    extern bool fake_slowmotion;
+}
+
 using namespace Tutorial;
 
 CustomGameState::CustomGameState(const Ogre::String &help_desc) : TutorialGameState(help_desc), scene_node(nullptr),
@@ -34,4 +39,28 @@ void CustomGameState::update(float time_since_last) {
     scene_node->setPosition(origin + Ogre::Vector3::UNIT_X * displacement);
 
     TutorialGameState::update(time_since_last);
+}
+
+void CustomGameState::keyReleased(const SDL_KeyboardEvent &arg) {
+    if ((arg.keysym.mod & ~(KMOD_NUM | KMOD_CAPS)) != 0) {
+        TutorialGameState::keyReleased(arg);
+        return;
+    }
+
+    if (arg.keysym.sym == SDLK_F2) {
+        current_frame_time_idx = !current_frame_time_idx;
+    }
+    if (arg.keysym.sym == SDLK_F3) {
+        fake_slowmotion = !fake_slowmotion;
+    } else {
+        TutorialGameState::keyReleased(arg);
+    }
+}
+
+void CustomGameState::generateDebugText(float time_since_last, Ogre::String &out_text) {
+    TutorialGameState::generateDebugText(time_since_last, out_text);
+
+    out_text += "\nPress F2 to toggle fixed framerate";
+    out_text += "\nPress F3 to fake slow motion ";
+    out_text += fake_slowmotion ? "[ON]" : "[OFF]";
 }
