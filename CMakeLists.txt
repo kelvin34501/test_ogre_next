@@ -84,7 +84,7 @@ endif ()
 add_executable(${PROJECT_NAME} WIN32 MACOSX_BUNDLE ${SOURCES} ${HEADERS} ${RESOURCES})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-target_include_directories(${PROJECT_NAME} PRIVATE "./include")
+target_include_directories(${PROJECT_NAME} PUBLIC "./include")
 target_link_libraries(${PROJECT_NAME} ${OGRE_LIBRARIES})
 
 if (APPLE)

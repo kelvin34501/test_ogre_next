@@ -158,13 +158,13 @@ endfunction()
 #----------------------------------------------------------------------------------------
 
 function(setupOgreSamplesCommon)
-    # message(STATUS "Copying OgreSamplesCommon cpp and header files to
-    #		${CMAKE_SOURCE_DIR}/include/OgreCommon
-    #		${CMAKE_SOURCE_DIR}/src/OgreCommon/")
+    message(STATUS "Copying OgreSamplesCommon cpp and header files to
+    		${CMAKE_SOURCE_DIR}/include/OgreCommon
+    		${CMAKE_SOURCE_DIR}/src/OgreCommon/")
     include_directories("${CMAKE_SOURCE_DIR}/include/OgreCommon/")
-    #    file(COPY "${OGRE_SOURCE}/Samples/2.0/Common/include/" DESTINATION "${CMAKE_SOURCE_DIR}/include/OgreCommon/")
-    #    file(COPY "${OGRE_SOURCE}/Samples/2.0/Common/src/" DESTINATION "${CMAKE_SOURCE_DIR}/src/OgreCommon/")
-    message(STATUS "OgreSamplesCommon automatic copy canceled")
+    file(COPY "${OGRE_SOURCE}/Samples/2.0/Common/include/" DESTINATION "${CMAKE_SOURCE_DIR}/include/OgreCommon/")
+    file(COPY "${OGRE_SOURCE}/Samples/2.0/Common/src/" DESTINATION "${CMAKE_SOURCE_DIR}/src/OgreCommon/")
+    # message(STATUS "OgreSamplesCommon automatic copy canceled")
 endfunction()
 
 #----------------------------------------------------------------------------------------
@@ -193,6 +193,7 @@ macro(setupOgre OGRE_SOURCE, OGRE_BINARIES, OGRE_LIBRARIES_OUT,
 
     # Ogre includes
     include_directories("${OGRE_BINARIES}/include")
+    include_directories("${OGRE_SOURCE}/Dependencies/include")
     include_directories("${OGRE_SOURCE}/Components/Hlms/Common/include")
     include_directories("${OGRE_SOURCE}/Components/Hlms/Unlit/include")
     include_directories("${OGRE_SOURCE}/Components/Hlms/Pbs/include")
