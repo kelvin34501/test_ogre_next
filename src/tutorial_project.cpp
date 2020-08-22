@@ -21,6 +21,21 @@
 #include "graphics_game_state.h"
 #include "logic_game_state.h"
 
+// platform specific headers
+#if OGRE_PLATFORM == OGRE_PLATFORM_LINUX
+
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <pwd.h>
+#include <errno.h>
+
+#endif
+
+#if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
+#include "shlobj.h"
+#endif
+
 
 namespace Tutorial {
     class TutorialGraphicsSystem : public Demo::GraphicsSystem {
