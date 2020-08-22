@@ -18,7 +18,7 @@ namespace Tutorial {
 
         void _notifyGraphicsGameState(GraphicsGameState *incoming_graphics_game_state);
 
-        virtual void update(float time_since_last);
+//        virtual void update(float time_since_last);
     };
 }
 

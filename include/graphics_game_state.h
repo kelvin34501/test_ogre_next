@@ -11,26 +11,26 @@
 
 namespace Tutorial {
     class GraphicsGameState : public Demo::TutorialGameState {
-        Ogre::SceneNode *scene_node;
-        Ogre::Vector3 last_position;
-        Ogre::Vector3 curr_position;
+//        Ogre::SceneNode *scene_node;
+//        Ogre::Vector3 last_position;
+//        Ogre::Vector3 curr_position;
 
-        bool enable_interpolation;
+//        bool enable_interpolation;
 
         void generateDebugText(float time_since_last, Ogre::String &out_text) override;
 
     public:
         explicit GraphicsGameState(const Ogre::String &help_desc);
 
-        Ogre::Vector3 &get_last_position_ref();
+//        Ogre::Vector3 &get_last_position_ref();
 
-        Ogre::Vector3 &get_curr_position_ref();
+//        Ogre::Vector3 &get_curr_position_ref();
 
-        void createScene01() override;
+//        void createScene01() override;
 
-        void update(float time_since_last) override;
+//        void update(float time_since_last) override;
 
-        void keyReleased(const SDL_KeyboardEvent &arg) override;
+//        void keyReleased(const SDL_KeyboardEvent &arg) override;
     };
 }
 
