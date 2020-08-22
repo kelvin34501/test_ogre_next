@@ -7,18 +7,26 @@
 
 #include <OgrePrerequisites.h>
 #include <TutorialGameState.h>
-#include "graphics_game_state.h"
+#include <GameEntity.h>
+#include <LogicSystem.h>
 
 namespace Tutorial {
     class LogicGameState : public Demo::GameState {
         float displacement;
-        GraphicsGameState *graphics_game_state;
+        Demo::GameEntity *cube_entity;
+        Demo::MovableObjectDefinition *cube_motion_def;
+
+        Demo::LogicSystem *logic_system;
     public:
         LogicGameState();
 
-        void _notifyGraphicsGameState(GraphicsGameState *incoming_graphics_game_state);
+        ~LogicGameState() override;
 
-//        virtual void update(float time_since_last);
+        void _notifyLogicSystem(Demo::LogicSystem *incoming_logic_system);
+
+        void createScene01() override;
+
+        void update(float time_since_last) override;
     };
 }
 
