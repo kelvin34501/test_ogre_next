@@ -16,19 +16,24 @@ namespace Tutorial {
 
 using namespace Tutorial;
 
-GraphicsGameState::GraphicsGameState(const Ogre::String &help_desc) : TutorialGameState(help_desc), scene_node(nullptr),
-                                                                      last_position(Ogre::Vector3::ZERO),
-                                                                      curr_position(Ogre::Vector3::ZERO),
-                                                                      enable_interpolation(true) {
+GraphicsGameState::GraphicsGameState(const Ogre::String &help_desc) :
+        TutorialGameState(help_desc), scene_node(nullptr),
+        last_position(Ogre::Vector3::ZERO),
+        curr_position(Ogre::Vector3::ZERO),
+        enable_interpolation(true) {
 
 }
 
 void GraphicsGameState::createScene01() {
     Ogre::SceneManager *scene_manager = mGraphicsSystem->getSceneManager();
-    Ogre::Item *item = scene_manager->createItem("Cube_d.mesh",
-                                                 Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
-                                                 Ogre::SCENE_DYNAMIC);
-    scene_node = scene_manager->getRootSceneNode(Ogre::SCENE_DYNAMIC)->createChildSceneNode(Ogre::SCENE_DYNAMIC);
+    Ogre::Item *item = scene_manager->createItem(
+            "Cube_d.mesh",
+            Ogre::ResourceGroupManager::AUTODETECT_RESOURCE_GROUP_NAME,
+            Ogre::SCENE_DYNAMIC
+    );
+    scene_node = scene_manager
+            ->getRootSceneNode(Ogre::SCENE_DYNAMIC)
+            ->createChildSceneNode(Ogre::SCENE_DYNAMIC);
     scene_node->attachObject(item);
 
     TutorialGameState::createScene01();
@@ -57,6 +62,8 @@ void GraphicsGameState::generateDebugText(float time_since_last, Ogre::String &o
         out_text += "\nBlend weight: ";
         out_text += Ogre::StringConverter::toString(weight);
     }
+
+    out_text += "\nPress ESC to quit. ";
 }
 
 void GraphicsGameState::update(float time_since_last) {
@@ -79,7 +86,9 @@ void GraphicsGameState::keyReleased(const SDL_KeyboardEvent &arg) {
         return;
     }
 
-    if (arg.keysym.sym == SDLK_F2) {
+    if (arg.keysym.sym == SDLK_ESCAPE) {
+        mGraphicsSystem->setQuit();
+    } else if (arg.keysym.sym == SDLK_F2) {
         fake_frame_skip = !fake_frame_skip;
     } else if (arg.keysym.sym == SDLK_F3) {
         fake_slowmotion = !fake_slowmotion;
