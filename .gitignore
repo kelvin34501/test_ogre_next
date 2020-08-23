@@ -13,12 +13,14 @@ bin/Data/resources2.cfg
 Dependencies/Ogre
 
 # editor
+.vs/
 .vscode/
 .idea/
 
 # build
 cmake-build-debug/
 cmake-build-release/
+CMakeSettings.json
 
 # log
 /Ogre.log

@@ -163,7 +163,7 @@ unsigned long Tutorial::render_thread(Ogre::ThreadHandle *thread_handle) {
         res = Tutorial::render_thread_app(thread_handle);
     } catch (Ogre::Exception &e) {
 #if OGRE_PLATFORM == OGRE_PLATFORM_WIN32
-        Demo::MessageBoxA(nullptr, e.getFullDescription().c_str(), "An exception has occured!",
+        MessageBoxA(nullptr, e.getFullDescription().c_str(), "An exception has occured!",
                        MB_OK | MB_ICONERROR | MB_TASKMODAL );
 #else
         std::cerr << "exception occurred: " << e.getFullDescription().c_str() << std::endl;
