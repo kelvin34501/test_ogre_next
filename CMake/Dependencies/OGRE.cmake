@@ -70,6 +70,7 @@ macro(setupPluginFileFromTemplate BUILD_TYPE OGRE_USE_SCENE_FORMAT)
 
     findPluginAndSetPath(${BUILD_TYPE} OGRE_PLUGIN_RS_D3D11 RenderSystem_Direct3D11)
     findPluginAndSetPath(${BUILD_TYPE} OGRE_PLUGIN_RS_GL3PLUS RenderSystem_GL3Plus)
+    findPluginAndSetPath(${BUILD_TYPE} OGRE_PLUGIN_RS_VULKAN RenderSystem_Vulkan)
 
     if (${BUILD_TYPE} STREQUAL "Debug")
         configure_file(${CMAKE_SOURCE_DIR}/CMake/Templates/Plugins.cfg.in ${CMAKE_SOURCE_DIR}/bin/${BUILD_TYPE}/plugins_d.cfg)

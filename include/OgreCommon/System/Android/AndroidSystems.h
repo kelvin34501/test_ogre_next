@@ -4,7 +4,7 @@ This source file is part of OGRE
 (Object-oriented Graphics Rendering Engine)
 For the latest info, see http://www.ogre3d.org/
 
-Copyright (c) 2000-2016 Torus Knot Software Ltd
+Copyright (c) 2000-present Torus Knot Software Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,63 +26,47 @@ THE SOFTWARE.
 -----------------------------------------------------------------------------
 */
 
-#ifndef _Demo_StaticPluginLoader_H_
-#define _Demo_StaticPluginLoader_H_
+#ifndef _Demo_AndroidSystems_H_
+#define _Demo_AndroidSystems_H_
 
-#include "OgreBuildSettings.h"
+#include "OgrePrerequisites.h"
 
-namespace Ogre
-{
-#ifdef OGRE_STATIC_LIB
-    #ifdef OGRE_BUILD_RENDERSYSTEM_METAL
-        class MetalPlugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_D3D11
-        class D3D11Plugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_GL3PLUS
-        class GL3PlusPlugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_GLES2
-        class GLES2Plugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_VULKAN
-        class VulkanPlugin;
-    #endif
-#endif
-    class Root;
-}
+struct android_app;
+struct ANativeWindow;
 
 namespace Demo
 {
     /// Utility class to load plugins statically
-    class StaticPluginLoader
+    class AndroidSystems
     {
-#ifdef OGRE_STATIC_LIB
-        unsigned int    mDummy;
-    #ifdef OGRE_BUILD_RENDERSYSTEM_GL3PLUS
-        Ogre::GL3PlusPlugin         *mGL3PlusPlugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_GLES2
-        Ogre::GLES2Plugin           *mGLES2Plugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_D3D11
-        Ogre::D3D11Plugin           *mD3D11PlusPlugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_METAL
-        Ogre::MetalPlugin           *mMetalPlugin;
-    #endif
-    #ifdef OGRE_BUILD_RENDERSYSTEM_VULKAN
-        Ogre::VulkanPlugin			*mVulkanPlugin;
-    #endif
-#endif
+        android_app *mAndroidApp;
+        ANativeWindow *mNativeWindow;
+
     public:
-        StaticPluginLoader();
-        ~StaticPluginLoader();
+        AndroidSystems();
 
-        void install( Ogre::Root *root );
-    };
-}
+        static void setAndroidApp( android_app *androidApp );
 
+        static void setNativeWindow( ANativeWindow *nativeWindow );
+        static ANativeWindow *getNativeWindow( void );
+
+        /**
+        On Android platforms:
+            Opens a file in an APK and returns a DataStream smart pointer that can be read from
+        On non-Android platforms:
+            Returns the same string as received (passthrough), so that receiver can use traditional
+            file-reading interfaces to open the file
+        */
+#if OGRE_PLATFORM == OGRE_PLATFORM_ANDROID
+        static Ogre::DataStreamPtr openFile( const Ogre::String &filename );
+#else
+        static const Ogre::String &openFile( const Ogre::String &filename ) { return filename; }
 #endif
 
+        static bool isAndroid();
+
+        static void registerArchiveFactories( void );
+    };
+}  // namespace Demo
+
+#endif
